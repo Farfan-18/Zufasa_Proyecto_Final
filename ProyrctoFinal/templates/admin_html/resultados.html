@@ -1,0 +1,40 @@
+<!DOCTYPE html>{% load static%}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Resultados</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="{% static 'Bootstrap/bootstrap.css'%}">
+    <link rel="stylesheet" type="text/css" href="{% static 'Bootstrap/bootstrap.js'%}">
+    <link rel="stylesheet" type="text/css" href="{% static 'login_css/style.css' %}">
+</head>
+<body>
+<section class="vh-100000000 gradient-custom" style="height: auto; ">
+{% include 'admin_html/nav.html' %}
+<h1 style="font-size:200%;  margin: 15px;color: white; font-family: Arial, sans-serif; ">Resultados:</h1>
+              {% csrf_token %}
+        {% if not datos.titulo == "None" %}
+            {% for dato in datos %}
+                <ul class="card-list" >
+                    <li class="card" style=" width: 50%; ">
+                    <h1>{{ dato.titulo }}  </h1>
+                        <p>Usuarios:</p>
+                        {% for i in dato.Usuarios %}
+                            {% if i or i == 0 %}
+                                <p>[{{ forloop.counter0|add:1 }}].- {{ i }}</p>
+                            {% endif %}
+                        {% endfor %}
+                        <p>Puntuacion:</p>
+                            {% for i in dato.Resultados%}
+                                {% if i or i == 0 %}
+                                    <p>[{{ forloop.counter0|add:1 }}].- {{ i|first }}</p>
+                                {% endif %}
+                            {% endfor %}
+
+                    </li>
+                </ul>
+            {% endfor %}
+        {% endif %}
+    </section>
+</body>
+</html>

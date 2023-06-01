@@ -1,0 +1,49 @@
+<!DOCTYPE html>{% load static  %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Encuesta</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'login_css/style.css' %}">
+</head>
+
+<section class="vh-100 gradient-custom">
+<body>
+
+            <a style="font-size:20px; margin-left: 90%;color: white; font-family: Arial, sans-serif; "
+               class="nav-link" href="{% url 'login' %}">Cerrar sesion</a>
+    <h1 style="font-size:200%;  margin: 15px;color: white; font-family: Arial, sans-serif; ">Encuestas:</h1>
+
+        <form id="encuestaForm" method="POST" action="/guardar_encuesta/{{id}}"> <!-- Reemplaza "/guardar_encuesta/" con la URL correcta en tu servidor Django -->
+        {% csrf_token %}
+        {% if not datos.titulo == "None" %}
+            {% for dato in datos %}
+                <h1 name="titulo_" style="font-size:200%; text-align: center; margin: 15px;color: white; font-family: Arial, sans-serif; ">{{ dato.titulo }}  </h1>
+                  {% for pregunta in dato.preguntas %}
+                    <div class="bloque" data-encuesta="{{ dato.id }}">
+                      <h3 style="font-size:110%;  margin: 15px; color: white; font-family: Arial, sans-serif; " >
+                          {{ pregunta.texto }}</h3>
+                      {% for respuesta in pregunta.respuestas %}
+                        <input type="radio" name="respuestas_{{dato.titulo}}_{{ pregunta.texto }}" value="{{ respuesta.id }}">
+                        <label style="font-size:110%;  margin: 15px; color: rgb(192, 212,250); font-family: Arial, sans-serif; " >
+                            {{ respuesta.texto }}</label><br>
+                      {% endfor %}
+                    </div>
+                  {% endfor %}
+            {% endfor %}
+        {% endif %}
+                <button type="submit" style="font-size:110%; margin-left: 50%;text-align: center;font-family: Arial, sans-serif; ">Guardar</button>
+
+    </form>
+
+ <script>
+       var url = window.location.href;
+        var encuestaId = url.split('/').pop();
+
+        // Asignar el número al atributo action del formulario
+        var formElement = document.getElementById('encuestaForm');
+        formElement.action += encuestaId;
+  </script>
+</body>
+
+    </section>
+</html>

@@ -1,0 +1,49 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+  }
+
+  h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+
+  button {
+    padding: 8px 12px;
+    margin-bottom: 10px;
+    background-color: #4285f4;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background-color: #3367d6;
+  }
+
+  .button-primary {
+    background-color: #4285f4;
+    color: #fff;
+  }
+
+  .button-primary:hover {
+    background-color: #3367d6;
+  }
+
+  .question {
+    margin-bottom: 20px;
+  }
+
+  input[type="text"],
+  input[type="checkbox"] {
+    margin-bottom: 5px;
+    padding: 8px;
+    border: 1px solid #ccc;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 5px;
+  }
+
+

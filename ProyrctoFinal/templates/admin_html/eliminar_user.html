@@ -1,0 +1,39 @@
+<!DOCTYPE html>{% load static  %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Eliminar usuario</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="{% static 'Bootstrap/bootstrap.css'%}">
+    <link rel="stylesheet" type="text/css" href="{% static 'Bootstrap/bootstrap.js'%}">
+    <link rel="stylesheet" type="text/css" href="{% static 'login_css/style.css' %}">
+</head>
+<body>
+
+<section class="vh-100 gradient-custom">
+
+{% include 'admin_html/nav.html' %}
+<h1 style=" font-size:200%; margin: 15px;color: white; font-family: Arial, sans-serif; ">Eliminar usuario:</h1>
+<form  method="POST">
+              {% csrf_token %}
+    <div>
+    <label for="email" style="font-size:110%; margin: 15px; color: white; font-family: Arial, sans-serif; ">Ingresa el email del usuario:</label>
+    <input type="email" id="email" name="email" required>
+  </div>
+    <button onclick="mostrarAlerta()" type="submit" style="font-size:110%;  margin: 15px;font-family: Arial, sans-serif; ">Eliminar</button>
+</form>
+    </section>
+<script>
+function mostrarAlerta() {
+    var email = document.getElementById('email').value;
+
+        if(email=="admin@gmail.com"){
+            alert("EL USUARIO \t\t\t"+email+ "\n\nNO SE PUEDE ELIMINAR!!!");
+        }else{
+            alert("EL USUARIO \t\t\t"+email+ "\nSE HA ELIMINADO");
+           }
+
+}
+</script>
+</body>
+</html>

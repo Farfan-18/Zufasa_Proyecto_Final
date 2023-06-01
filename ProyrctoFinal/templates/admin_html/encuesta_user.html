@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+      {% if not datos.titulo == "None" %}
+            {% for dato in datos %}
+                <h1>{{ dato.titulo }}  </h1>
+                {% for pregunta in dato.preguntas %}
+                    <h3>{{ pregunta.-texto }}</h3>
+                    {% for respuesta in pregunta.respuestas %}
+                        <input type="checkbox" name="respuestas" value="{{ respuesta.id}}">
+                        <label>{{ respuesta.texto }}</label><br>
+                    {% endfor %}
+                {% endfor %}
+            {% endfor %}
+        {% endif %}
+</body>
+</html>

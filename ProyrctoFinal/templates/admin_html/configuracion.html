@@ -1,0 +1,220 @@
+<!DOCTYPE html>{% load static  %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Configuracion</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="{% static 'Bootstrap/bootstrap.css'%}">
+    <link rel="stylesheet" type="text/css" href="{% static 'Bootstrap/bootstrap.js'%}">
+    <link rel="stylesheet" type="text/css" href="{% static 'admin_css/configuracion.css'%}">
+    <link rel="stylesheet" type="text/css" href="{% static 'login_css/style.css' %}">
+
+</head>
+
+<section class="vh-1000000 gradient-custom">
+<body  onload="addArea()">
+{% include 'admin_html/nav.html' %}
+<h1 id="title"style="padding-left: 40%;font-size:200%; margin: 15px;color: white; font-family: Arial, sans-serif;">
+    Título de la encuesta</h1>
+  <button onclick="editTitle()" >Editar título</button>
+  <br><br>
+  <div id="questionsContainer">
+    <!-- Preguntas se agregarán aquí -->
+  </div>
+  <br>
+  <button onclick="addQuestion()">Añadir pregunta</button>
+    <h1 style="margin-left: 2%;font-size:120%; color: white; font-family: Arial, sans-serif;">Usuarios:</h1>
+  <br><br>
+  <div id="UsersContainer">
+    <!-- Preguntas se agregarán aquí -->
+  </div>
+  <br>
+
+  <button onclick="enviarEncuesta() ">guardar</button>
+
+  <script>
+    function editTitle() {
+      var newTitle = prompt("Ingrese el nuevo título:");
+      if (newTitle) {
+        document.getElementById("title").innerText = newTitle;
+      }
+    }
+
+    preguntas_1=[];
+    respuestas_1=[];
+    function addQuestion() {
+
+      var questionsContainer = document.getElementById("questionsContainer");
+      var questionDiv = document.createElement("div");
+      questionDiv.className = "question";
+
+      var questionText = document.createElement("input");
+      questionText.type = "text";
+      questionText.placeholder = "Pregunta";
+      questionDiv.appendChild(questionText);
+       preguntas_1.push(questionText)
+
+      var addOptionButton = document.createElement("button");
+      addOptionButton.innerText = "Agregar respuesta";
+      addOptionButton.onclick = function() {
+        var optionInput = document.createElement("input");
+        optionInput.type = "checkbox";
+        optionInput.name = questionText.value;
+        optionInput.id="myCheck"
+        optionInput.value = questionText.value;
+        optionInput.style.marginLeft = "1%";
+        var optionLabel = document.createElement("label");
+        optionLabel.style.marginLeft = "2%";
+        optionLabel.style.fontSize = "120%";
+        optionLabel.style.color = "white";
+        optionLabel.style.fontFamily = "Arial, sans-serif";
+        optionLabel.innerText = "Respuesta";
+
+        var optionTextInput = document.createElement("input");
+        optionTextInput.type = "text";
+        optionTextInput.placeholder = "Texto de la respuesta";
+        optionTextInput.oninput = function() {
+          optionInput.value = optionTextInput.value;
+          respuestas_1.push(optionTextInput.value)
+        };
+
+        optionLabel.appendChild(optionInput);
+        optionLabel.appendChild(optionTextInput);
+        optionLabel.appendChild(document.createElement("br"));
+        questionDiv.appendChild(optionLabel);
+      };
+      questionDiv.appendChild(addOptionButton);
+
+      var removeQuestionButton = document.createElement("button");
+      removeQuestionButton.innerText = "Eliminar pregunta";
+      removeQuestionButton.onclick = function() {
+        questionsContainer.removeChild(questionDiv);
+      };
+      questionDiv.appendChild(removeQuestionButton);
+
+      questionsContainer.appendChild(questionDiv);
+
+    }
+
+
+
+     function enviarEncuesta() {
+    // Obtener los datos de las preguntas y respuestas
+    var datos = {
+      titulo: document.getElementById("title").innerText,
+      preguntas: [],
+      usuarios:[]
+    };
+    console.log(datos.titulo)
+    questionTexts=document.getElementsByClassName('question');
+
+  for (var i = 0; i < questionTexts.length; i++) {
+      var pregunta = {
+        texto: questionTexts[i].getElementsByTagName("input")[0].value,
+        respuestas: [],
+        checks: [],
+      };
+      console.log("pregunta "+i+pregunta.texto)
+
+
+      respuestasDiv=document.getElementsByClassName('question')[i].getElementsByTagName("label");
+      for (var j = 0; j < respuestasDiv.length; j++) {
+        var respuesta = respuestasDiv[j].getElementsByTagName("input")[0].value;
+        pregunta.respuestas.push(respuesta);
+        console.log("respuesta"+j+"--"+respuesta)
+        var checkbox =  respuestasDiv[j].querySelector('#myCheck');
+        var valor = checkbox.checked ;
+        pregunta.checks.push(valor);
+        console.log('Valor del Checkbox:', valor);
+      }
+
+        usuarioDiv=document.getElementsByClassName('usuarios')[0].getElementsByTagName("label");
+      for (var j = 0; j < usuarioDiv.length; j++) {
+        var usuario = usuarioDiv[j].getElementsByTagName("input")[0].value;
+        datos.usuarios.push(usuario);
+        console.log("respuesta"+j+"--"+usuario)
+      }
+
+      datos.preguntas.push(pregunta);
+    }
+
+    // Realizar la solicitud HTTP al servidor
+    var xhr = new XMLHttpRequest();
+    var url = "{% url 'guardar_respuestas' %}";
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        // La respuesta del servidor ha sido recibida correctamente
+        console.log(xhr.responseText);
+        // Aquí puedes realizar cualquier acción adicional después de enviar los datos
+      }
+    };
+
+    var csrftoken = getCookie('csrftoken');
+     xhr.setRequestHeader('X-CSRFToken', csrftoken);
+     console.log(JSON.stringify(datos));
+    xhr.send(JSON.stringify(datos));
+
+
+    window.location.href = "{% url 'menu' %}";
+    alert(datos['titulo']+" guardada exitosamente");
+  }
+
+  function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      var cookies = document.cookie.split(';');
+      for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+  function addArea() {
+      var UsersContainer = document.getElementById("UsersContainer");
+
+      var areaDiv = document.createElement("div");
+      areaDiv.className = "usuarios";
+
+      var addUserButton = document.createElement("button");
+      addUserButton.innerText = "Agregar usuario";
+      addUserButton.onclick = function() {
+
+        var userLabel = document.createElement("label");
+        userLabel.innerText = "Usuario: ";
+        userLabel.style.marginLeft = "2%";
+        userLabel.style.fontSize = "120%";
+        userLabel.style.color = "white";
+        userLabel.style.fontFamily = "Arial, sans-serif";
+
+        var userTextInput = document.createElement("input");
+        userTextInput.type = "text";
+        userTextInput.placeholder = "Usuario";
+        userTextInput.style.marginLeft = "1%";
+
+        userLabel.appendChild(userTextInput);
+        userLabel.appendChild(document.createElement("br"));
+        areaDiv.appendChild(userLabel);
+      };
+      areaDiv.appendChild(addUserButton);
+
+      var removeUserButton = document.createElement("button");
+      removeUserButton.innerText = "Eliminar ultimo usuario";
+      removeUserButton.onclick = function() {
+          var inputs = areaDiv.getElementsByTagName("input");
+          areaDiv.removeChild(inputs[inputs.length-1].parentNode);
+      };
+      areaDiv.appendChild(removeUserButton);
+
+      UsersContainer.appendChild(areaDiv);
+    }
+  </script>
+</body>
+    </section>
+</html>

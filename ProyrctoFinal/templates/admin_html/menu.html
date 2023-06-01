@@ -1,0 +1,35 @@
+<!DOCTYPE html>{% load static  %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="{% static 'Bootstrap/bootstrap.css'%}">
+    <link rel="stylesheet" type="text/css" href="{% static 'Bootstrap/bootstrap.js'%}">
+    <link rel="stylesheet" type="text/css" href="{% static 'login_css/style.css' %}">
+</head>
+<body>
+<section class="vh-100 gradient-custom">
+{% include 'admin_html/nav.html' %}
+ <!-- Background image -->
+  <div
+    class="img-fluid pb-5     "
+    style="
+      background-image: url('https://mdbcdn.b-cdn.net/img/new/slides/041.webp');
+      height : 100%; width 100%
+    "
+  >
+    <div class="mask" style="background-color: rgba(0, 0, 0, 0.6); " >
+      <div class="d-flex justify-content-center align-items-center h-100%" >
+        <div class="text-white" class=" text-xl" style="  text-align: center;
+font-size:1000% ">ZUFAZA
+          <br>
+            ENCUESTAS
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Background image -->
+    </section>
+</body>
+</html>
